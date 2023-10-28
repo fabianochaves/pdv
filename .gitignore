@@ -1,1 +1,5 @@
-aaa
+# Impede o Git de ignorar pastas vazias
+# O ! na frente de uma regra nega a regra anterior
+# Portanto, estamos dizendo ao Git para não ignorar pastas vazias
+/*
+!*/
