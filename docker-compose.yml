@@ -1,0 +1,58 @@
+version: '3'
+services:
+
+  front-end:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - 8000:80
+    volumes:
+      - ./app/front-end:/var/www/html
+      - ./php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - mynetwork
+
+  back-end:
+    build:
+      context: .
+      dockerfile: dockerfile
+    ports:
+      - 8001:80
+    volumes:
+      - ./app/back-end:/var/www/html
+    networks:
+      - mynetwork
+
+  dcs-postgres:
+    image: postgres:15.3-alpine
+    container_name: dcs-postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: pdv
+    ports:
+      - 5432:5432
+    volumes:
+      - ./bd_postgree/postgres:/var/lib/postgresql/data
+    networks:
+      - mynetwork
+
+  dcs-pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: dcs-pgadmin
+    restart: always
+    depends_on:
+      - dcs-postgres
+    environment:
+      PGADMIN_DEFAULT_EMAIL: fabianochavesg@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 123
+    ports:
+      - 8080:80
+    volumes:
+      - ./bd_postgree/pgadmin:/var/lib/pgadmin
+    networks:
+      - mynetwork
+      
+networks:
+  mynetwork:
